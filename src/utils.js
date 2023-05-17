@@ -49,3 +49,17 @@ export const generateCode1 = (function (start = 0) {
 export function generateCode2() {
   return generateCode2.value ? ++generateCode2.value : generateCode2.value = 1;
 }
+
+export function totalAmount(cart) {
+  let result = 0;
+  cart.forEach((item) => {
+    if (item.quantity > 1) {
+      for (let i = 0; i < item.quantity; i++) {
+        result += item.price
+      }
+    } else {
+      result += item.price
+    }
+  })
+  return result.toLocaleString(undefined, { useGrouping: true })
+}
