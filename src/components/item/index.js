@@ -2,7 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import './style.css';
 
-function Item({ item, children }) {
+function Item({ item, onAction, buttonText }) {
+
+  const callbacks = {
+    onAction: (e, item) => {
+      e.stopPropagation()
+      onAction(item.code)
+    }
+  }
+
   return (
     <div className={'Item' + (item.selected ? ' Item_selected' : '')}>
       <div className='Item-container'>
@@ -11,8 +19,8 @@ function Item({ item, children }) {
       </div>
       <div className='Item-actions'>
         <p className='Item-price'>{item.price.toLocaleString(undefined, { useGrouping: true })} ₽</p>
-        {children[1]}
-        {children[0]}
+        {buttonText === 'Удалить' && <p className='Item-quantity'>{item.quantity} шт</p>}
+        <button onClick={(e) => callbacks.onAction(e, item)}>{buttonText}</button>
       </div>
     </div>
   );
@@ -26,12 +34,11 @@ Item.propTypes = {
     count: PropTypes.number,
     quantity: PropTypes.number,
   }).isRequired,
-  onAddToCart: PropTypes.func,
-  children: PropTypes.node,
+  onAction: PropTypes.func,
 };
 
 Item.defaultProps = {
-  onAddToCart: () => { },
+  onAction: () => { },
 }
 
 export default React.memo(Item);

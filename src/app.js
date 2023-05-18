@@ -12,7 +12,7 @@ import Modal from './components/modal';
  */
 function App({ store }) {
   const [modal, setModal] = useState(false);
-  const { list, cart } = store.getState();
+  const { list, cart, total } = store.getState();
 
   const callbacks = {
     onAddToCart: useCallback((code) => {
@@ -29,20 +29,24 @@ function App({ store }) {
       <Head title='Магазин' />
       <Controls
         cart={cart}
+        total={total}
         modal={modal}
         setModal={setModal}
       />
       <List
         list={list}
-        onAddToCart={callbacks.onAddToCart}
+        onAction={callbacks.onAddToCart}
+        buttonText='Добавить'
       />
       {
         modal &&
         <Modal
-          cart={cart}
           setModal={setModal}
-          onRemoveFromCart={callbacks.onRemoveFromCart}
-        />
+          modalTitle='Корзина'
+        >
+          <List list={cart} onAction={callbacks.onRemoveFromCart} buttonText='Удалить' />
+          {cart.length > 0 && <p className='Modal-price'>Итого<span>{total.toLocaleString(undefined, { useGrouping: true })} ₽</span></p>}
+        </Modal>
       }
     </PageLayout>
   );

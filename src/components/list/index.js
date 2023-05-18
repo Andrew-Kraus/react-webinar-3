@@ -3,24 +3,13 @@ import PropTypes from 'prop-types';
 import Item from "../item";
 import './style.css';
 
-function List({ list, onAddToCart }) {
-
-  const callbacks = {
-    onAddToCart: (e, item) => {
-      e.stopPropagation()
-      onAddToCart(item.code)
-    }
-  }
-
+function List({ list, onAction, buttonText }) {
 
   return (
     <div className='List'>{
       list.map(item =>
         <div key={item.code} className='List-item'>
-          <Item item={item} onAddToCart={onAddToCart}>
-            <button onClick={(e) => callbacks.onAddToCart(e, item)}>Добавить</button>
-            {null}
-          </Item>
+          <Item item={item} onAction={onAction} buttonText={buttonText} />
         </div>
       )}
     </div>
@@ -31,11 +20,6 @@ List.propTypes = {
   list: PropTypes.arrayOf(PropTypes.shape({
     code: PropTypes.number
   })).isRequired,
-  onAddToCart: PropTypes.func,
 };
-
-List.defaultProps = {
-  onAddToCart: () => { },
-}
 
 export default React.memo(List);

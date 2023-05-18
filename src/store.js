@@ -43,6 +43,22 @@ class Store {
     for (const listener of this.listeners) listener();
   }
 
+  calculateTotal() {
+    let total = 0;
+    this.state.cart.forEach(item => {
+      total += item.price * item.quantity;
+    });
+    return total;
+  }
+
+  updateTotal() {
+    const total = this.calculateTotal();
+    this.setState({
+      ...this.state,
+      total: total
+    });
+  }
+
   addToCart(code) {
     const selectedProduct = this.state.list.find(item => item.code === code);
     if (selectedProduct) {
@@ -70,6 +86,7 @@ class Store {
           cart: [...this.state.cart, newCartItem]
         });
       }
+      this.updateTotal()
     }
   }
 
@@ -78,6 +95,7 @@ class Store {
       ...this.state,
       cart: this.state.cart.filter(item => item.code !== code)
     })
+    this.updateTotal()
   }
 
 }
