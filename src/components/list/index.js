@@ -1,15 +1,17 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import Item from "../item";
 import './style.css';
+import itemCatalog from "../itemCatalog/itemCatalog";
+import itemCart from "../itemCart/itemCart";
 
 function List({ list, onAction, buttonText }) {
+  const ItemComponent = buttonText === 'Добавить' ? itemCatalog : itemCart;
 
   return (
     <div className='List'>{
       list.map(item =>
         <div key={item.code} className='List-item'>
-          <Item item={item} onAction={onAction} buttonText={buttonText} />
+          <ItemComponent item={item} onAction={onAction} buttonText={buttonText} />
         </div>
       )}
     </div>
