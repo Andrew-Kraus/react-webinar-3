@@ -4,6 +4,7 @@ import { cn as bem } from '@bem-react/classname';
 import { numberFormat } from "../../utils";
 import './style.css';
 import { Link } from "react-router-dom";
+import l from '../../languages/lang-rendering';
 
 function Item(props) {
 
@@ -17,14 +18,14 @@ function Item(props) {
   }
 
   return (
-      <Link className={cn()} to={`/product/${props.item._id}`}>
+      <Link className={cn()} to={props.link}>
         {/*<div className={cn('code')}>{props.item._id}</div>*/}
         <div className={cn('title')}>
           {props.item.title}
         </div>
         <div className={cn('actions')}>
           <div className={cn('price')}>{numberFormat(props.item.price)} ₽</div>
-          <button onClick={(e) => callbacks.onAdd(e)}>Добавить</button>
+          <button onClick={(e) => callbacks.onAdd(e)}>{l('buttonAdd')}</button>
         </div>
       </Link>
   );

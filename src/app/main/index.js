@@ -7,6 +7,9 @@ import List from "../../components/list";
 import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import Pagination from '../../components/pagination';
+import Navigation from '../../components/navigation';
+import NavigationItem from '../../components/navigation-item';
+import l from '../../languages/lang-rendering';
 
 function Main() {
 
@@ -22,6 +25,7 @@ function Main() {
     amount: state.basket.amount,
     sum: state.basket.sum,
     currentPage: state.catalog.currentPage,
+    lang: state.language.language,
   }));
 
   const callbacks = {
@@ -30,20 +34,24 @@ function Main() {
     // Открытие модалки корзины
     openModalBasket: useCallback(() => store.actions.modals.open('basket'), [store]),
     changePage: useCallback((page) => store.actions.catalog.load(page)),
+    changeLang : useCallback((lang) => store.actions.language.setLanguage(lang))
   }
 
   const renders = {
     item: useCallback((item) => {
-      return <Item item={item} onAdd={callbacks.addToBasket} />
+      return <Item item={item} onAdd={callbacks.addToBasket} link={`/product/${item._id}`} />
     }, [callbacks.addToBasket]),
   };
 
   return (
     <PageLayout>
-      <Head title='Магазин' />
-      <BasketTool onOpen={callbacks.openModalBasket} amount={select.amount} sum={select.sum} />
+      <Head title={l('main')} changeLang={callbacks.changeLang} lang={select.lang} />
+      <Navigation>
+        <NavigationItem link='/' text={l('mainLink')} />
+        <BasketTool onOpen={callbacks.openModalBasket} amount={select.amount} sum={select.sum} />
+      </Navigation>
       <List list={select.list} renderItem={renders.item} />
-      <Pagination onPageChange={callbacks.changePage} totalPages={select.pages} currentPage={select.currentPage}  />
+      <Pagination onPageChange={callbacks.changePage} totalPages={select.pages} currentPage={select.currentPage} />
     </PageLayout>
   );
 }
