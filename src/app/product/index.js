@@ -8,7 +8,7 @@ import PageLayout from "../../components/page-layout";
 import Head from "../../components/head";
 import BasketTool from "../../components/basket-tool";
 import Navigation from "../../components/navigation";
-import NavigationItem from "../../components/navigation-item";
+import NavigationItems from "../../components/navigation-items";
 import l from '../../languages/lang-rendering';
 
 function Product({ }) {
@@ -51,7 +51,7 @@ function Product({ }) {
         <PageLayout>
             <Head title={select.product.title} changeLang={callbacks.changeLang} lang={select.lang} />
             <Navigation>
-                <NavigationItem link='/' text={l('mainLink')} />
+                <NavigationItems />
                 <BasketTool onOpen={callbacks.openModalBasket} amount={select.amount} sum={select.sum} />
             </Navigation>
             {isLoading ? <p>{loading}</p> : <ProductItem product={select.product} addToBasket={callbacks.addToBasket} />}

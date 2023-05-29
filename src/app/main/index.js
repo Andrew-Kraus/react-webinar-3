@@ -8,7 +8,7 @@ import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import Pagination from '../../components/pagination';
 import Navigation from '../../components/navigation';
-import NavigationItem from '../../components/navigation-item';
+import NavigationItems from '../../components/navigation-items';
 import l from '../../languages/lang-rendering';
 
 function Main() {
@@ -47,7 +47,7 @@ function Main() {
     <PageLayout>
       <Head title={l('main')} changeLang={callbacks.changeLang} lang={select.lang} />
       <Navigation>
-        <NavigationItem link='/' text={l('mainLink')} />
+        <NavigationItems />
         <BasketTool onOpen={callbacks.openModalBasket} amount={select.amount} sum={select.sum} />
       </Navigation>
       <List list={select.list} renderItem={renders.item} />
