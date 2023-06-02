@@ -27,5 +27,18 @@ function LoginForm({ onLogin, onToken, error, loading }) {
     )
 }
 
+LoginForm.propTypes = {
+    onLogin: PropTypes.func,
+    onToken: PropTypes.func,
+    error: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+    loading: PropTypes.bool,
+  };
+  
+  LoginForm.defaultProps = {
+    onLogin: () => {},
+    onToken: () => {},
+  }
+  
+
 
 export default memo(LoginForm);

@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import PropTypes from "prop-types";
 import './style.css';
 
 function ProfileInfo({ user, loading }) {
@@ -13,4 +14,10 @@ function ProfileInfo({ user, loading }) {
     );
 }
 
+ProfileInfo.propTypes = {
+    user: PropTypes.object,
+    loading: PropTypes.bool,
+  };
+  
+  
 export default memo(ProfileInfo);
