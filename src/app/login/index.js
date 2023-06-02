@@ -16,13 +16,13 @@ function Login() {
 
     const select = useSelector(state => ({
         error: state.login.error,
-        auth: state.login.auth,
-        loading: state.login.loading,
+        auth: state.profile.auth,
+        loading: state.profile.loading,
     }));
 
     const callbacks = {
         onLogin: useCallback((username, password) => { store.actions.login.login(username, password) }, [store]),
-        onToken: useCallback(() => { store.actions.login.getUser() }, [store])
+        onToken: useCallback(() => { store.actions.profile.getUser() }, [store])
     }
 
 
@@ -37,7 +37,7 @@ function Login() {
                 <LocaleSelect />
             </Head>
             <Navigation />
-            <LoginForm onLogin={callbacks.onLogin} onToken={callbacks.onToken} error={select.error} loading={select.loading} />
+            <LoginForm onLogin={callbacks.onLogin} onToken={callbacks.onToken} error={select.error} loading={select.loading} t={t} />
         </PageLayout>
     );
 }

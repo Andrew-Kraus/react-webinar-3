@@ -29,8 +29,8 @@
 }
 
 .Login-button {
-    width: 53px;
-    height: 21px;
+    max-width: 80px;
+    min-height: 21px;
     cursor: pointer;
 }
 

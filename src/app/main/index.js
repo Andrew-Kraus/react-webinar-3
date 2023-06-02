@@ -11,11 +11,11 @@ import LocaleSelect from "../../containers/locale-select";
 import LoginMenu from '../../containers/login-menu';
 
 function Main() {
-
   const store = useStore();
 
   useInit(() => {
     store.actions.catalog.initParams();
+    store.actions.categories.loadCategories()
   }, [], true);
 
   const {t} = useTranslate();
@@ -27,8 +27,8 @@ function Main() {
         <LocaleSelect/>
       </Head>
       <Navigation />
-      <CatalogFilter/>
-      <CatalogList/>
+      <CatalogFilter />
+      <CatalogList />
     </PageLayout>
   );
 }

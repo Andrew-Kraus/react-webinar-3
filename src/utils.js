@@ -34,26 +34,40 @@ export function numberFormat(value, locale = 'ru-RU', options = {}) {
   return new Intl.NumberFormat(locale, options).format(value);
 }
 
-export function sortCategories(items) {
-
-  const buildCategoryTree = (categoryId, nesting) => {
-    const category = items.find(item => item._id === categoryId);
-    const children = items.filter(item => item.parent && item.parent._id === categoryId);
-    const subCategories = children.map(child => buildCategoryTree(child._id, nesting + 1));
-
-    return {
-      ...category,
-      nesting,
-      children: subCategories
-    };
-  };
-
-  let rootCategories = items.filter(item => !item.parent).map(item => buildCategoryTree(item._id, 1));
-  const allCategories = {
-    _id: '',
-    title: 'Все'
+export function sortCategories(categories) {
+  const result = [];
+  const parentChildMap = {};
+  for (const category of categories) {
+    const parentId = category.parent?._key || '';
+    if (!parentChildMap[parentId]) {
+      parentChildMap[parentId] = [];
+    }
+    parentChildMap[parentId].push(category._key);
   }
-  rootCategories.unshift(allCategories)
 
-  return rootCategories;
+  function buildSortCategories(category, prefix) {
+    const transformedCategory = {
+      ...category,
+      children: parentChildMap[category._key] || [],
+      combinedKey: prefix + category._key,
+      prefix
+    };
+
+    result.push(transformedCategory);
+
+    const childPrefix = prefix + '- ';
+
+    for (const childKey of parentChildMap[category._key] || []) {
+      const childCategory = categories.find((c) => c._key === childKey);
+      buildSortCategories(childCategory, childPrefix);
+    }
+  }
+
+  for (const category of categories) {
+    if (!category.parent) {
+      buildSortCategories(category, '');
+    }
+  }
+
+  return result;
 }

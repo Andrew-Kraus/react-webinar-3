@@ -4,15 +4,17 @@ class Login extends StoreModule {
 
   initState() {
     return {
-      user: null,
-      auth: false,
       error: false,
-      loading: true,
+      loading: false,
     }
   }
 
 
   async login(login, password) {
+    this.setState({
+      error: false,
+      loading: true,
+    });
     const data = { login: login, password: password }
     try {
       const response = await fetch('/api/v1/users/sign', {
@@ -21,25 +23,20 @@ class Login extends StoreModule {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      });
+      })
 
-      if (!response.ok) {
+      const responseData = await response.json();
+
+      if (responseData.error) {
         this.setState({
-          error: 'Ошибка: ' + response.status + ` (${response.statusText})`,
+          error: responseData.error.data.issues[0].message,
           loading: false,
         });
       }
 
-      const responseData = await response.json();
-
-      if (response.ok) {
+      if (!responseData.error) {
         localStorage.setItem('token', responseData.result.token)
-        this.setState({
-          ...this.getState(),
-          auth: true,
-          user: responseData.result,
-        });
-        this.getUser()
+        this.store.actions.profile.getUser()
         this.setState({
           error: false,
           loading: false,
@@ -49,53 +46,6 @@ class Login extends StoreModule {
       return responseData;
     } catch (error) {
       console.log(error)
-    }
-  }
-
-  async getUser() {
-    const token = localStorage.getItem('token')
-    if (token) {
-      const response = await fetch('/api/v1/users/self', {
-        headers: {
-          "X-Token": token,
-          "Content-Type": "application/json",
-        }
-      })
-      const json = await response.json();
-      if (json.result) {
-        this.setState({
-          ...this.getState(),
-          auth: true,
-          user: json.result,
-          loading: false
-        });
-      }
-    } else {
-      this.setState({
-        loading: false,
-      });
-    }
-  }
-
-  async logout() {
-    const token = localStorage.getItem('token')
-    if (token) {
-      const response = await fetch('/api/v1/users/sign', {
-        method: 'DELETE',
-        headers: {
-          "X-Token": token,
-          "Content-Type": "application/json",
-        }
-      })
-      const json = await response.json();
-      if (json) {
-        localStorage.removeItem('token')
-        this.setState({
-          ...this.getState(),
-          auth: false,
-          user: null,
-        });
-      }
     }
   }
 

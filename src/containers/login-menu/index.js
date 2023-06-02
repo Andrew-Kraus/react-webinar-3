@@ -3,21 +3,23 @@ import { Link } from 'react-router-dom';
 import useStore from '../../hooks/use-store';
 import useSelector from '../../hooks/use-selector';
 import './style.css';
+import useTranslate from '../../hooks/use-translate';
 
 function LoginMenu() {
+    const { t } = useTranslate();
     const store = useStore();
     useEffect(() => {
         callbacks.onToken();
     }, [])
     const callbacks = {
-        onToken: useCallback(() => store.actions.login.getUser()),
-        onLogout: useCallback(() => store.actions.login.logout())
+        onToken: useCallback(() => store.actions.profile.getUser()),
+        onLogout: useCallback(() => store.actions.profile.logout())
     };
 
     const select = useSelector(state => ({
-        auth: state.login.auth,
-        user: state.login.user,
-        loading: state.login.loading,
+        auth: state.profile.auth,
+        user: state.profile.user,
+        loading: state.profile.loading,
     }));
 
     return (
@@ -26,10 +28,10 @@ function LoginMenu() {
                 ?
                 <>
                     <Link to='/profile' className='Login-menu-title'>{select.user?.profile.name}</Link>
-                    <button className='Login-menu-button' onClick={callbacks.onLogout}>Выход</button>
+                    <button className='Login-menu-button' onClick={callbacks.onLogout}>{t('login.logout')}</button>
                 </>
                 :
-                <Link to='/login'><button className='Login-menu-button'>Вход</button></Link>}
+                <Link to='/login'><button className='Login-menu-button'>{t('login.loginButton')}</button></Link>}
         </div>
     );
 }

@@ -13,9 +13,9 @@ function Profile() {
     const { t } = useTranslate();
 
     const select = useSelector(state => ({
-        user: state.login.user,
-        auth: state.login.auth,
-        loading: state.login.loading,
+        user: state.profile.user,
+        auth: state.profile.auth,
+        loading: state.profile.loading,
     }));
 
 
@@ -30,7 +30,7 @@ function Profile() {
                 <LocaleSelect />
             </Head>
             <Navigation />
-            <ProfileInfo user={select.user} loading={select.loading} />
+            <ProfileInfo user={select.user} loading={select.loading} t={t} />
         </PageLayout>
     );
 }
