@@ -55,6 +55,4 @@ function Comment({ comment, currentComment, setCurrentComment, addComment, exist
     );
 }
 
-
-
 export default memo(Comment);

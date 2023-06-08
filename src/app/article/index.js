@@ -28,11 +28,14 @@ function Article() {
     dispatch(articleActions.load(params.id));
     dispatch(commentsActions.load(params.id))
   }, [params.id]);
+
+
   const select = useSelectorRedux(state => ({
     article: state.article.data,
     comments: state.comments.data,
     commentsCount: state.comments.count,
     waiting: state.article.waiting,
+    commentWaiting: state.comments.waiting,
   }), shallowequal); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
 
   const selector = useSelector(state => ({
@@ -56,7 +59,9 @@ function Article() {
       <Navigation />
       <Spinner active={select.waiting}>
         <ArticleCard article={select.article} onAdd={callbacks.addToBasket} t={t} />
-        {select.comments.items && <Comments comments={transformComments(select.comments.items)} commentsCount={select.commentsCount} addComment={callbacks.addComment} articleId={params.id} exists={selector.exists} userId={selector.user._id} />}
+        <Spinner active={select.commentWaiting}>
+          {select.comments.items && <Comments comments={transformComments(select.comments.items)} commentsCount={select.commentsCount} addComment={callbacks.addComment} articleId={params.id} exists={selector.exists} userId={selector.user._id} />}
+        </Spinner>
       </Spinner>
     </PageLayout>
   );

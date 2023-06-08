@@ -6,6 +6,11 @@ import { Link } from "react-router-dom";
 function Comments({ comments, commentsCount, addComment, articleId, exists, userId }) {
     const [text, setText] = useState('')
     const [currentComment, setCurrentComment] = useState('')
+    function submitComment(parent) {
+        addComment(text, parent);
+        setText('');
+    }
+
     return (
         <div className='Comments'>
             <h3 className='Comments-title'>Комментарии ({commentsCount})</h3>
@@ -17,8 +22,8 @@ function Comments({ comments, commentsCount, addComment, articleId, exists, user
                     {exists ?
                         <>
                             <h5 className='Comments-subtitle'>Новый комментарий</h5>
-                            <textarea type='text' placeholder='Текст' className='Comments-input' onChange={(e) => setText(e.target.value)} />
-                            <button className='Comments-button' onClick={() => addComment(text, { _id: articleId, _type: 'article' })}>Отправить</button>
+                            <textarea type='text' placeholder='Текст' className='Comments-input' value={text} onChange={(e) => setText(e.target.value)} />
+                            <button className='Comments-button' onClick={() => submitComment({ _id: articleId, _type: 'article' })}>Отправить</button>
                         </>
                         :
                         <p className='Comments-login'><Link to='/login'>Войдите</Link>, чтобы иметь возможность комментировать</p>
@@ -27,7 +32,6 @@ function Comments({ comments, commentsCount, addComment, articleId, exists, user
         </div>
     );
 }
-
 
 
 export default memo(Comments);

@@ -16,6 +16,7 @@ export default {
   },
   addComment: (text, parent) => {
     return async (dispatch, getState, services) => {
+      dispatch({ type: 'comments/add-start' });
       const token = localStorage.getItem('token');
       const opt = {
         text: text,
@@ -31,11 +32,10 @@ export default {
           },
           body: JSON.stringify(opt)
         });
-        const items = { items: [...getState().comments.data.items, res.data.result] }
-        dispatch({ type: 'comments/load-success', payload: { data: items } });
+        dispatch({ type: 'comments/add-success', payload: { comment: res.data.result, count: getState().comments.data.items.length + 1 } });
 
       } catch (e) {
-        dispatch({ type: 'comments/load-error' });
+        dispatch({ type: 'comments/add-error' });
       }
     }
   }
