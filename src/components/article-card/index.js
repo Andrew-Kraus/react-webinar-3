@@ -48,4 +48,5 @@ ArticleCard.defaultProps = {
   t: (text) => text
 }
 
+
 export default memo(ArticleCard);

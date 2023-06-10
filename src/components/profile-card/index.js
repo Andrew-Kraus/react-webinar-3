@@ -33,4 +33,5 @@ ProfileCard.defaultProps = {
   onAdd: () => {}
 }
 
+
 export default memo(ProfileCard);

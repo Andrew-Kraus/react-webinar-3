@@ -58,4 +58,5 @@ function CatalogFilter() {
   )
 }
 
+
 export default memo(CatalogFilter);

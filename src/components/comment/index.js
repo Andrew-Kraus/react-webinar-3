@@ -1,12 +1,15 @@
 import { memo, useState } from "react";
 import './style.css';
+import PropTypes from "prop-types";
 import { convertDate } from "../../utils/convert-date";
-import { Link } from "react-router-dom";
+import useTranslate from "../../hooks/use-translate";
 
-function Comment({ comment, currentComment, setCurrentComment, addComment, exists, userId }) {
-    const [commentText, setCommentText] = useState('')
+function Comment({ comment, currentComment, setCurrentComment, addComment, exists, userId, onSignIn }) {
+    const [commentText, setCommentText] = useState('');
+    const { t } = useTranslate();
 
-    function submitComment(id) {
+    function submitComment(e, id) {
+        e.preventDefault();
         addComment(commentText, { _id: id, _type: 'comment' });
         setCurrentComment('');
     }
@@ -19,40 +22,55 @@ function Comment({ comment, currentComment, setCurrentComment, addComment, exist
                 <p className='Comment-date'>{convertDate(comment.dateCreate)}</p>
             </div>
             <p className="Comment-text">{comment.text}</p>
-            {currentComment !== comment._id ?
-                <button className='Comment-button-reply' onClick={() => setCurrentComment(comment._id)}>Ответить</button>
-                :
+            <button className='Comment-button-reply' onClick={() => setCurrentComment(comment._id)}>{t('comments.reply')}</button>
+            <div className={comment.level < 5 ? 'Comment-reply' : ''}>
+                {comment.children.length > 0 && comment.children.map((childComment) => (
+                    <Comment comment={childComment} key={childComment._id} currentComment={currentComment} setCurrentComment={setCurrentComment} addComment={addComment} userId={userId} exists={exists} onSignIn={onSignIn} />
+                ))}
+
+                {exists && currentComment === comment._id &&
+                    <form className={comment.level < 5 ? 'Comment-form' : ''}>
+                        <h5 className='Comments-subtitle'>{t('comments.newReply')}</h5>
+                        <textarea className='Comments-input' type='text' required onChange={(e) => setCommentText(e.target.value)} />
+                        <div className='Comment-buttons-container'>
+                            <button className="Comments-button" disabled={!commentText.trim()} onClick={(e) => submitComment(e, comment._id)}>{t('comments.submit')}</button>
+                            <button className="Comments-button" onClick={() => setCurrentComment('')}>{t('comments.cancel')}</button>
+                        </div>
+                    </form>
+                }
                 <>
-                    {exists ?
+                    {!exists && currentComment === comment._id &&
                         <>
-                            <textarea type='text' placeholder='Текст' className='Comments-input' onChange={(e) => setCommentText(e.target.value)} />
-                            <div className='Comment-buttons-container'>
-                                <button className="Comments-button" onClick={() => submitComment(comment._id)}>Отправить</button>
-                                <button className="Comments-button" onClick={() => setCurrentComment('')}>Отмена</button>
-                            </div>
-                        </>
-                        :
-                        <>
-                            <button className='Comment-button-reply' onClick={() => setCurrentComment(comment._id)}>Ответить</button>
-                            <p className='Comments-login'>
-                                <Link to='/login'>Войдите</Link>
-                                , чтобы иметь возможность ответить.
-                                <button className='Comment-login-cancel' onClick={() => setCurrentComment('')}>Отмена.</button>
+                            <p className='Comment-login'>
+                                <span onClick={onSignIn}>{t('comments.signIn')}</span>
+                                , {t('comments.conditionReply')}
+                                <button className='Comment-login-cancel' onClick={() => setCurrentComment('')}>{t('comments.cancel')}</button>
                             </p>
                         </>
 
                     }
                 </>
-            }
-            {comment.children.length > 0 && (
-                <div className={comment.parent._tree.length < 7 ? 'Comment-reply' : ''}>
-                    {comment.children.map((childComment) => (
-                        <Comment comment={childComment} key={childComment._id} currentComment={currentComment} setCurrentComment={setCurrentComment} addComment={addComment} userId={userId} exists={exists}/>
-                    ))}
-                </div>
-            )}
+            </div>
         </div>
     );
 }
+
+
+Comment.propTypes = {
+    comment: PropTypes.object,
+    addComment: PropTypes.func,
+    exists: PropTypes.bool,
+    userId: PropTypes.string,
+    onSignIn: PropTypes.func,
+    currentComment: PropTypes.string,
+    setCurrentComment: PropTypes.func,
+}
+
+Comment.defaultProps = {
+    addComment: () => { },
+    onSignIn: () => { },
+    setCurrentComment: () => { },
+}
+
 
 export default memo(Comment);

@@ -42,3 +42,9 @@
     font-weight: 400;
     font-size: 16px;
 }
+
+.Comments-login span {
+    color: #0087E9;
+    text-decoration: underline;
+    cursor: pointer;
+}

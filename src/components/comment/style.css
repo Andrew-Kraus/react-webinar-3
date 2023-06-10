@@ -1,6 +1,7 @@
 .Comment {
     font-size: 12px;
     margin-top: 30px;
+    word-break: break-all;
 }
 
 .Comment-reply {
@@ -49,4 +50,20 @@
     color: #666666;
     cursor: pointer;
     font-size: 16px;
+}
+
+
+.Comment-login {
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.Comment-login span {
+    color: #0087E9;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.no-margin {
+    margin-left: 0;
 }
