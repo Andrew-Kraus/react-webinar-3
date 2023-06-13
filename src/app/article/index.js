@@ -27,11 +27,12 @@ function Article() {
   const dispatch = useDispatch();
   // Параметры из пути /articles/:id
   const params = useParams();
+  const { lang } = useTranslate();
   useInit(() => {
     //store.actions.article.load(params.id);
     dispatch(articleActions.load(params.id));
     dispatch(commentsActions.load(params.id))
-  }, [params.id]);
+  }, [params.id, lang]);
 
 
   const select = useSelectorRedux(state => ({
